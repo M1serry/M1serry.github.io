@@ -1040,11 +1040,11 @@ canvas:not(#ribbon-canvas),
     transform: rotate(0);
   }
   to {
-    -webkit-transform: rotate(360deg);
+    /*-webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
+    transform: rotate(360deg);*/
   }
 }
 @-webkit-keyframes avatar_turn_around {
@@ -1056,11 +1056,11 @@ canvas:not(#ribbon-canvas),
     transform: rotate(0);
   }
   to {
-    -webkit-transform: rotate(360deg);
+    /*-webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
+    transform: rotate(360deg);*/
   }
 }
 @-o-keyframes avatar_turn_around {
@@ -1072,11 +1072,11 @@ canvas:not(#ribbon-canvas),
     transform: rotate(0);
   }
   to {
-    -webkit-transform: rotate(360deg);
+    /*-webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
+    transform: rotate(360deg);*/
   }
 }
 @keyframes avatar_turn_around {
@@ -1088,11 +1088,11 @@ canvas:not(#ribbon-canvas),
     transform: rotate(0);
   }
   to {
-    -webkit-transform: rotate(360deg);
+    /*-webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
     -o-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
+    transform: rotate(360deg);*/
   }
 }
 @-moz-keyframes sub_menus {
@@ -2283,11 +2283,11 @@ figure.highlight pre .javascript .function {
   }
 }
 #article-container .flink .flink-list > .flink-list-item:hover img {
-  -webkit-transform: rotate(360deg);
+  /*-webkit-transform: rotate(360deg);
   -moz-transform: rotate(360deg);
   -o-transform: rotate(360deg);
   -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
+  transform: rotate(360deg);*/
 }
 #article-container .flink .flink-list > .flink-list-item:before {
   position: absolute;
@@ -2923,11 +2923,11 @@ h1.page-title + .tag-cloud-list {
   object-fit: cover;
 }
 .avatar-img img:hover {
-  -webkit-transform: rotate(360deg);
+  /*-webkit-transform: rotate(360deg);
   -moz-transform: rotate(360deg);
   -o-transform: rotate(360deg);
   -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
+  transform: rotate(360deg);*/
 }
 @media screen and (min-width: 900px) {
   html.hide-aside .layout {
@@ -4347,11 +4347,11 @@ h1.page-title + .tag-cloud-list {
   transition: all 0.3s;
 }
 #vcomment .vimg:hover {
-  -webkit-transform: rotate(360deg);
+  /*-webkit-transform: rotate(360deg);
   -moz-transform: rotate(360deg);
   -o-transform: rotate(360deg);
   -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
+  transform: rotate(360deg);*/
 }
 #vcomment .vcards .vcard .vcontent.expand:before,
 #vcomment .vcards .vcard .vcontent.expand:after {
@@ -4370,11 +4370,11 @@ h1.page-title + .tag-cloud-list {
   transition: all 0.5s;
 }
 #waline-wrap .vuser:hover {
-  -webkit-transform: rotate(360deg);
+  /*-webkit-transform: rotate(360deg);
   -moz-transform: rotate(360deg);
   -o-transform: rotate(360deg);
   -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
+  transform: rotate(360deg);*/
 }
 .fireworks {
   position: fixed;
