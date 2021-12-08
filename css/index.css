@@ -3232,8 +3232,8 @@ h1.page-title + .tag-cloud-list {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  content: '';
+  background-color: rgba(0,0,0,0);
+  /*content: '';*/
 }
 #footer-wrap {
   position: relative;
