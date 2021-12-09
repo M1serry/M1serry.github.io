@@ -279,7 +279,7 @@ template {
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
-.postImgHover img,
+.postImgHover note-icon,
 #pagination .prev-post img,
 #pagination .next-post img,
 .relatedPosts > .relatedPosts-list > div img {
