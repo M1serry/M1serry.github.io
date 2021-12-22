@@ -279,7 +279,7 @@ template {
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
-.postImgHover note-icon,
+.postImgHover img,
 #pagination .prev-post img,
 #pagination .next-post img,
 .relatedPosts > .relatedPosts-list > div img {
@@ -359,11 +359,11 @@ template {
 }
 canvas:not(#ribbon-canvas),
 #web_bg {
-  -webkit-animation: to_show 2s;
-  -moz-animation: to_show 2s;
-  -o-animation: to_show 2s;
-  -ms-animation: to_show 2s;
-  animation: to_show 2s;
+  -webkit-animation: to_show 4s;
+  -moz-animation: to_show 4s;
+  -o-animation: to_show 4s;
+  -ms-animation: to_show 4s;
+  animation: to_show 4s;
 }
 #ribbon-canvas {
   -webkit-animation: ribbon_to_show 4s;
@@ -1462,7 +1462,7 @@ input::placeholder {
   z-index: -999;
   width: 100%;
   height: 100%;
-  background: url(https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/59A823EA8F36EF4E40D7C66FBB7B6FFF.jpg);
+  background: url(https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/MikuMiku.jpg);
   background-attachment: local;
   background-position: center;
   -webkit-background-size: cover;
@@ -2872,7 +2872,7 @@ h1.page-title + .tag-cloud-list {
   color: #fff;
 }
 #aside-content :only-child > .card-widget {
-  /*margin-top: 0;*/
+  margin-top: 0;
 }
 #aside-content .card-more-btn {
   float: right;
@@ -3142,12 +3142,10 @@ h1.page-title + .tag-cloud-list {
 }
 #post-comment .comment-head #comment-switch {
   display: inline-block;
-  float: right;
-  margin: 2px auto 0;
-  padding: 4px 16px;
-  width: max-content;
-  border-radius: 8px;
-  background: #f6f8fa;
+  vertical-align: middle;
+}
+#post-comment .comment-head #comment-switch > span {
+  display: none;
 }
 #post-comment .comment-head #comment-switch .first-comment {
   color: #49b1f5;
@@ -5392,9 +5390,6 @@ blockquote.pullquote.right {
   background: rgba(18,18,18,0.8);
   -webkit-box-shadow: 0 5px 6px -5px rgba(133,133,133,0);
   box-shadow: 0 5px 6px -5px rgba(133,133,133,0);
-}
-[data-theme='dark'] #post-comment #comment-switch {
-  background: #2c2c2c !important;
 }
 [data-theme='dark'] #post-comment #comment-switch .switch-btn {
   filter: brightness(0.8);
