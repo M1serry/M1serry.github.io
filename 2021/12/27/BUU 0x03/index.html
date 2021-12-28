@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>BUU刷题记录 0x03 | FelidÆの厨房</title><meta name="keywords" content="SQL注入,HTTP头注"><meta name="author" content="FelidÆ"><meta name="copyright" content="FelidÆ"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[极客大挑战 2019]Http要素察觉：HTTP头篡改 题是最最基础的HTTP头篡改，目的应该是让初学者明白部分常见HTTP头的具体含义，为后学的HTTP注入打基础，因此借这道题做一些关于数据包HTTP头信息的笔记非常合适的说 JK大挑战的题真的是太合适了 我真是high到不行啦哈哈哈哈（  HT"><link rel="shortcut icon" href="/"><link rel="canonical" href="http://example.com/2021/12/27/BUU%200x03/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUU刷题记录 0x03',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-28 22:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/null" onerror="onerror=null;src='null'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 食物们</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-home"></i><span> 厨师宣言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: transparent"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">FelidÆの厨房</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 食物们</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-home"></i><span> 厨师宣言</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">BUU刷题记录 0x03</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-27T11:48:31.669Z" title="发表于 2021-12-27 19:48">2021-12-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-28T14:44:35.703Z" title="更新于 2021-12-28 22:44">2021-12-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/WriteUp/">WriteUp</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/WriteUp/BUU/">BUU</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="极客大挑战-2019-Http"><a href="#极客大挑战-2019-Http" class="headerlink" title="[极客大挑战 2019]Http"></a>[极客大挑战 2019]Http</h1><p>要素察觉：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/honghong87/articles/6941436.html">HTTP头篡改</a></p>
+<p>题是最最基础的HTTP头篡改，目的应该是让初学者明白部分常见HTTP头的具体含义，为后学的HTTP注入打基础，因此借这道题做一些关于数据包HTTP头信息的笔记非常合适的说</p>
+<p><del>JK大挑战的题真的是太合适了 我真是high到不行啦哈哈哈哈（</del></p>
+<blockquote>
+<p>HTTP构建于TCP/IP协议之上，默认端口号是80。一般来说，由HTTP客户端发起一个请求，创建一个到服务器指定端口（默认是80端口）的TCP连接。HTTP服务器则在那个端口监听客户端的请求。一旦收到请求，服务器会向客户端返回一个状态，比如”HTTP/1.1 200 OK”，以及返回的内容，如请求的文件、错误消息、或者其它信息。</p>
+<p>HTTP请求方法有多种，一般常用的是GET，POST，PUT，DELETE。<br>每个请求一般包括以下内容<br><strong>请求报文：</strong><br><strong>请求行</strong><br>由请求方法字段、URL 字段 和HTTP 协议版本字段 3 个部分组成，他们之间使用空格隔开。常用的 HTTP 请求方法有 GET、POST。</p>
+<p><strong>请求头部</strong><br>为请求报文添加了一些附加信息，由“key/value”对组成，每行一对，请求头部通知服务器有关于客户端请求的信息，典型的请求头有：如，User-Agent — 请求的浏览器类型</p>
+<p><strong>空行</strong><br>表示最后一个请求头部之后是一个空行，发送回车符和换行符，通知服务器以下不再有请求头部，因为头部是由多个“key/value”对组成，空行的作用表示结束。</p>
+<p><strong>请求包体</strong><br>请求包体不在GET方法中使用，而是POST方法中使用。</p>
+<p><strong>响应报文：</strong><br><strong>状态行</strong><br>由HTTP 协议版本字段、状态码（如404）和状态码的描述文本3个部分组成</p>
+<p><strong>响应头部</strong><br>由“key/value”对组成，每行一对</p>
+<p><strong>空行</strong><br>最后一个响应头部之后是一个空行，发送回车符和换行符，通知服务器以下不再有响应头部。</p>
+<p><strong>响应包体</strong><br>服务器返回给客户端的文本信息。</p>
+</blockquote>
+<p>打开题目是SYC的小组简介和招新邀请，前端非常好看</p>
+<p>然后就划到底了 似乎是一个正常得不能再正常的网页呢</p>
+<p>只有打开源码仔细观察 找到入口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281453701.png"></p>
+<p>不仅把链接放在两个字上 还把onclick设置为false了 直接在前端页面点还点不动</p>
+<p>进去看看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281455101.png"></p>
+<p>早就跟HTTP打过不少交道了，这次先专门简单解释一些周大福中常用头的含义，其它的就暂且不在此赘述了。</p>
+<p><strong>Host</strong></p>
+<p>表示服务器的域名以及服务器所监听的端口号。如果所请求的端口是对应的服务的标准端口（80），则端口号可以省略</p>
+<p>和浏览器头上顶着的url栏信息一致</p>
+<p><strong>User-Agent</strong></p>
+<p>是浏览器的身份标识字符串。向服务器说明用户此次访问具体用的什么型号的浏览器。</p>
+<p><strong><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6fc9cea6daa2">Cookie</a></strong></p>
+<p>由之前服务器通过Set-Cookie设置的一个HTTP协议Cookie。</p>
+<p>Cookie注入就是从这里动手，大概也算是HTTP头注的一种吧</p>
+<p><strong>Referer</strong></p>
+<p>表示浏览器所访问的前一个页面，可以认为是之前访问页面的链接将浏览器带到了当前页面。</p>
+<p><strong>PS：Referer</strong>其实是<strong>Referrer</strong>这个单词，但RFC制作标准时<strong>把它拼错了（</strong></p>
+<p>后来也就将错就错使用Referer了</p>
+<p><strong>X-Forwarded-For</strong></p>
+<p>也叫做XFF</p>
+<blockquote>
+<p>X-Forwarded-For是一个扩展头，HTTP/1.1（RFC 2616）协议并没有对它的定义。它最开始是由Squid这个缓存代理软件引入，用来表示HTTP请求端真实IP，现在已经成为事实上的标准，被各大HTTP代理、负载均衡等转发服务广泛使用，并被写入RFC 7239（Forwarded HTTP Extension）标准中。</p>
+<p>如果一个 HTTP 请求到达服务器之前，经过了三个代理 Proxy1、Proxy2、Proxy3，IP 分别为 IP1、IP2、IP3，用户真实 IP 为 IP0，那么按照 XFF 标准，服务端最终会收到以下信息：</p>
+<p>X-Forwarded-For: IP0, IP1, IP2</p>
+<p>Proxy3直连服务器，它会给XFF追加IP2，表示它是在帮Proxy2转发请求。列表中并没有IP3，IP3 可以在服务端通过remote_address字段获得。我们知道HTTP连接基于TCP连接，HTTP协议中没有IP的概念，remote_address来自TCP连接，表示与服务端建立TCP连接的设备IP，在这个例子里就是IP3。</p>
+</blockquote>
+<p>服务端验证机制薄弱的情况下，我们就可以通过XFF伪造客户端IP。</p>
+<p>回到题目这边，先抓包看看原始的请求报文长什么样</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281505687.png"></p>
+<p>结合题目要求，得知我们可以添加Referer头以满足从规定网页跳转过来的要求</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281619323.png"></p>
+<p>再根据要求，我们可以通过修改User-Agent伪造浏览器的“身份证”</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281621011.png"></p>
+<p>再通过XFF伪造客户端IP，本题的考点就到此结束</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281622451.png"></p>
+<p>虽说题是简单，但正因如此才能为初学者带来直观的效果反馈，对HTTP报文有个最基础的认识</p>
+<p>拿来作第一篇关于HTTP头注的笔记了 温故而知新</p>
+<h1 id="强网杯-2019-随便注"><a href="#强网杯-2019-随便注" class="headerlink" title="[强网杯 2019]随便注"></a>[强网杯 2019]随便注</h1><p>要素察觉：堆叠注入</p>
+<p>私以为堆叠注入需要比普通注入更多的SQL语法基础和对数据库的库、表、列、数据类型更细的理解</p>
+<p>这道题对我来说独立做出来比较难，自己平时还是得多用命令行连自己数据库练练操作的说</p>
+<p>开题单引号报错判断参数为单引号包裹型，注释符正常，排表排出来2列，似乎一切都只在普通注入的范畴中</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281643009.png"></p>
+<p>第一次做的时候就在此止步了，第一是select被过滤，当时还没找到绕过的方法，第二是即使绕过去了也不知道flag在哪个位置，只好暂时放弃。</p>
+<p>后来再攻此题的时候渐渐地有了新的感悟，爽到</p>
+<p>我们要牢记注入漏洞的通用原则：<strong>让用户输入成为代码去执行命令</strong></p>
+<p>同样的，做开发时我们也要始终牢记：<strong>永远不要相信用户的输入</strong></p>
+<p>我们现在注的是数据库，那当然就能输入各种各样的操作数据库的相关代码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;show databases;#</span></span><br></pre></td></tr></table></figure>
+
+<p>惯性思维真是个不太好的东西。之前第一次听说万能密码的时候也发出过类似的惊叹：还能这么操作？，其实回头想想，还是自己把自己的思路给禁锢了。焯！</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281717650.png"></p>
+<p>但堆叠注入并不是在每种情况下都能使用的。大多数时候，因为API或数据库引擎的不支持，堆叠注入都无法实现。但它对一个人学习注入漏洞思维带来的帮助真的挺大的说。</p>
+<p>回到题目来，我们接着用SQL一个个查询可疑的数据，最终把flag定位在一个由沼气驱动的表里面 谁会命这么臭的表名啊（半恼</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;use supersqli;show tables;desc `1919810931114514`;# // 因为表名为纯数字因此要求用反引号括起来</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281739118.png"></p>
+<p>这里能绕过select的话其实就已经成功了</p>
+<p>因此第一种做法即是利用<code>concat()</code>函数结合<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3a0a62243492">预处理理语句</a>绕过正则表达式。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;use supersqli;show tables;PREPARE hacker from concat(&#x27;</span>s<span class="string">&#x27;,&#x27;</span>elect<span class="string">&#x27;, &#x27;</span><span class="operator">*</span> <span class="keyword">from</span> `<span class="number">1919810931114514</span>`<span class="string">&#x27;);EXECUTE hacker;#</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281804118.png"></p>
+<p>第二种做法完全配得上神仙思路之称</p>
+<p>开局我们已经意识到 查询是通过一种类似id号匹配来完成的</p>
+<p>实现语句猜一猜八成长成这样</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> 某个表 <span class="keyword">where</span> id <span class="operator">=</span> <span class="string">&#x27;$参数&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这从某种意义上其实帮我们解决了前面参数中的select被过滤的问题。</p>
+<p>我们希望要打印的是flag，那就把flag从原来的位置上硬生生搬过来 不就麻烦了亿点嘛（瘫</p>
+<p>接下来三个目标：找到flag的位置，然后把它搬过来，最后一起打印出来</p>
+<p>describe一下words表，发现只有id和data两列</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112281854758.png"></p>
+<p>因此大胆猜测我们提交查询的窗口就是在这个表里查询数据的（人有多大胆，题有多少解了属于是</p>
+<p>或者更靠谱点 再确认下自己是不是真的在这里就好了嘛</p>
+<p>报错信息应该可以成这事……</p>
+<p><strong>那我当场直接把这表扬了</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;rename table words to meixiangdaoba;#</span></span><br></pre></td></tr></table></figure>
+
+<p>再回去正常查询逝一下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112282202110.png"></p>
+<p>我们不仅确认了猜测的正确性，<strong>我们还成功把环境搞炸了</strong></p>
+<p>此时这个表已经不复存在，在执行查询时就会报错并结束进程，其它的努力（指其它想注的代码）<strong>全部木大</strong> 一周目Bad End，寄</p>
+<p>开 始 二 周 目</p>
+<p>我 们 只 有 一 次 机 会</p>
+<p>我们不select flag，我们只是flag的搬运工</p>
+<p>接下来的语句，我们要一次性全部注进去</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> words <span class="keyword">to</span> woyoulaila; <span class="operator">/</span><span class="operator">/</span> 将words表名更改为woyoulaila</span><br><span class="line">rename <span class="keyword">table</span> `<span class="number">1919810931114514</span>` <span class="keyword">to</span> words; <span class="operator">/</span><span class="operator">/</span> 将flag所在的表名更改为words</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> words change flag data <span class="type">char</span>(<span class="number">50</span>); <span class="operator">/</span><span class="operator">/</span> 因为两表数据类型不同的缘故，我们得将被调包的words表中data列的数据类型从<span class="type">varchar</span>(<span class="number">20</span>)改成数据类型为<span class="type">char</span>(<span class="number">50</span>) 否则flag字符串会超过原先的规定大小上限</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> words <span class="keyword">add</span> id <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span> auto_increment <span class="keyword">primary</span> key; <span class="operator">/</span><span class="operator">/</span> 因为原句<span class="keyword">select</span>的始终是一个叫做id的列，再打印出id的对应数据，所以我们还得在被调包的words表中新创建一个列，名字为id。</span><br></pre></td></tr></table></figure>
+
+<p>后面的<code>auto_increment</code>和<code>primary key</code>作用是让id被创建的同时依次补上1，2，3……，以此与data列再次形成一个一一对应关系。</p>
+<p>Excel画一个模拟图</p>
+<p>加id列之前长这样</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112282239568.png"></p>
+<p>加id列之后长这样</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112282240888.png"></p>
+<p>关于<a target="_blank" rel="noopener" href="https://blog.csdn.net/Jester_J/article/details/117411364">数据库的主键约束和自增长</a> <strong>强烈建议先对这个有了初步认识再回头来看这种解题方法！</strong></p>
+<p>和被调包之前的words不能说一模一样，只能说 完 全 一 致</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112282244394.png"></p>
+<p>大 胜 利</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a><a class="post-meta__tags" href="/tags/HTTP%E5%A4%B4%E6%B3%A8/">HTTP头注</a></div><div class="post_share"></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Http"><span class="toc-number">1.</span> <span class="toc-text">[极客大挑战 2019]Http</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%BA%E7%BD%91%E6%9D%AF-2019-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">2.</span> <span class="toc-text">[强网杯 2019]随便注</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/27/BUU%200x03/" title="BUU刷题记录 0x03">BUU刷题记录 0x03</a><time datetime="2021-12-27T11:48:31.669Z" title="发表于 2021-12-27 19:48">2021-12-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/25/%E5%85%B3%E4%BA%8Ephpinfo/" title="关于phpinfo页面">关于phpinfo页面</a><time datetime="2021-12-25T14:39:59.624Z" title="发表于 2021-12-25 22:39">2021-12-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/21/%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" title="关于php伪协议">关于php伪协议</a><time datetime="2021-12-21T03:59:43.815Z" title="发表于 2021-12-21 11:59">2021-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/12/BUU%200x02/" title="BUU刷题记录 0x02">BUU刷题记录 0x02</a><time datetime="2021-12-12T11:05:02.984Z" title="发表于 2021-12-12 19:05">2021-12-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/11/BUU%200x01/" title="BUU刷题记录 0x01">BUU刷题记录 0x01</a><time datetime="2021-12-11T11:15:56.452Z" title="发表于 2021-12-11 19:15">2021-12-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 By FelidÆ</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">愿你有一天能和你最重要的人重逢</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
