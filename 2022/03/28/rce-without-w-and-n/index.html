@@ -146,7 +146,7 @@
 <p>大部分情况下都会加上<code>urlencode()</code>，出现乱码总是很老火的说</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="string">&quot;phpinfo&quot;</span>;</span><br><span class="line">var_dump(urlencode(~<span class="variable">$a</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment"># string(21) &quot;%8F%97%8F%96%91%99%90&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/Felidaessolution/cloud/BUU/20220330183323.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/M1serry/cloud/BUU/20220330183323.png"></p>
 <p>相信不止我一个人在刚接触这种姿势时认为，将<code>phpinfo();</code>这完整的函数进行取反不是能减少一些操作嘛，为什么要单独取反函数名再加上括号和分号呢？</p>
 <p>让我们把这段代码再回下锅</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$code</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;code&#x27;</span>];</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$code</span>);</span><br></pre></td></tr></table></figure>
